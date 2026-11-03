@@ -370,14 +370,76 @@ def inject_custom_css():
             line-height: 1.4;
         }}
 
-        /* ── Sidebar ── */
-        div[data-testid="stSidebar"] {{
-            background: linear-gradient(180deg, #091326 0%, #050811 100%) !important;
-            border-right: 1px solid rgba(255,255,255,0.08) !important;
+        /* ── Floating glass sidebar ── */
+        section[data-testid="stSidebar"] {{
+            background: transparent !important;
+            border: 0 !important;
+            min-width: 300px !important;
+            max-width: 300px !important;
+            padding: 12px 0 12px 14px !important;
         }}
 
-        div[data-testid="stSidebar"] > div:first-child {{
-            background: transparent !important;
+        section[data-testid="stSidebar"] > div {{
+            height: calc(100vh - 24px) !important;
+            min-height: 0 !important;
+            background: linear-gradient(160deg, rgba(13, 29, 55, 0.97) 0%, rgba(5, 10, 22, 0.98) 100%) !important;
+            border: 1px solid rgba(148, 190, 255, 0.18) !important;
+            border-radius: 22px !important;
+            box-shadow: 0 18px 48px rgba(0, 0, 0, 0.48), inset 0 1px 0 rgba(255,255,255,0.08) !important;
+            overflow: hidden !important;
+            backdrop-filter: blur(22px);
+            -webkit-backdrop-filter: blur(22px);
+        }}
+
+        section[data-testid="stSidebar"] div[data-testid="stSidebarContent"],
+        section[data-testid="stSidebar"] div[data-testid="stSidebarUserContent"] {{
+            height: 100% !important;
+            max-height: 100% !important;
+            overflow: hidden !important;
+            padding-top: 0.75rem !important;
+            padding-bottom: 0.5rem !important;
+        }}
+
+        section[data-testid="stSidebar"] [data-testid="stVerticalBlock"] {{
+            gap: 0.55rem !important;
+        }}
+
+        section[data-testid="stSidebar"] hr {{
+            margin: 0.35rem 0 !important;
+        }}
+
+        section[data-testid="stSidebar"] div.stButton > button {{
+            min-height: 2.25rem !important;
+            padding-top: 0.35rem !important;
+            padding-bottom: 0.35rem !important;
+            font-size: 0.72rem !important;
+        }}
+
+        section[data-testid="stSidebar"] div[data-testid="stRadio"] label {{
+            font-size: 0.82rem !important;
+        }}
+
+        section[data-testid="stSidebar"] div[data-testid="stSlider"] {{
+            padding-top: 0 !important;
+            padding-bottom: 0 !important;
+        }}
+
+        @media (max-height: 850px) {{
+            section[data-testid="stSidebar"] {{
+                padding-top: 8px !important;
+                padding-bottom: 8px !important;
+            }}
+            section[data-testid="stSidebar"] div[data-testid="stSidebarContent"],
+            section[data-testid="stSidebar"] div[data-testid="stSidebarUserContent"] {{
+                padding-top: 0.45rem !important;
+            }}
+            section[data-testid="stSidebar"] [data-testid="stVerticalBlock"] {{
+                gap: 0.35rem !important;
+            }}
+            section[data-testid="stSidebar"] .hud-card {{
+                padding: 8px 10px !important;
+                margin: 5px 0 !important;
+            }}
         }}
 
         /* ── Buttons ── */
