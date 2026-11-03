@@ -396,18 +396,22 @@ def inject_custom_css():
             line-height: 1.4;
         }}
 
-        /* ── Floating glass sidebar ── */
-        section[data-testid="stSidebar"] {{
+        /* ── Floating glass sidebar: viewport-fitted, no visible overflow ── */
+        section[data-testid="stSidebar"] {
             background: transparent !important;
             border: 0 !important;
             min-width: 300px !important;
             max-width: 300px !important;
-            padding: 12px 0 12px 14px !important;
-        }}
+            padding: 10px 0 10px 14px !important;
+            box-sizing: border-box !important;
+        }
 
-        section[data-testid="stSidebar"] > div {{
-            height: calc(100vh - 24px) !important;
+        section[data-testid="stSidebar"] > div {
+            height: calc(100dvh - 20px) !important;
+            max-height: calc(100dvh - 20px) !important;
             min-height: 0 !important;
+            display: flex !important;
+            flex-direction: column !important;
             background: linear-gradient(160deg, rgba(13, 29, 55, 0.97) 0%, rgba(5, 10, 22, 0.98) 100%) !important;
             border: 1px solid rgba(148, 190, 255, 0.18) !important;
             border-radius: 22px !important;
@@ -415,58 +419,92 @@ def inject_custom_css():
             overflow: hidden !important;
             backdrop-filter: blur(22px);
             -webkit-backdrop-filter: blur(22px);
-        }}
+        }
 
         section[data-testid="stSidebar"] div[data-testid="stSidebarContent"],
-        section[data-testid="stSidebar"] div[data-testid="stSidebarUserContent"] {{
+        section[data-testid="stSidebar"] div[data-testid="stSidebarUserContent"] {
             height: 100% !important;
             max-height: 100% !important;
+            min-height: 0 !important;
             overflow: hidden !important;
-            padding-top: 0.75rem !important;
-            padding-bottom: 0.5rem !important;
-        }}
+            padding: 8px 10px 8px 10px !important;
+            box-sizing: border-box !important;
+        }
 
-        section[data-testid="stSidebar"] [data-testid="stVerticalBlock"] {{
-            gap: 0.55rem !important;
-        }}
+        section[data-testid="stSidebar"] [data-testid="stSidebarUserContent"] > div[data-testid="stVerticalBlock"] {
+            height: 100% !important;
+            min-height: 0 !important;
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 0.28rem !important;
+        }
 
-        section[data-testid="stSidebar"] hr {{
-            margin: 0.35rem 0 !important;
-        }}
+        /* The profile card is the second-last sidebar block; push it and Sign Out down. */
+        section[data-testid="stSidebar"] [data-testid="stSidebarUserContent"] > div[data-testid="stVerticalBlock"] > div:nth-last-child(2) {
+            margin-top: auto !important;
+        }
 
-        section[data-testid="stSidebar"] div.stButton > button {{
-            min-height: 2.25rem !important;
-            padding-top: 0.35rem !important;
-            padding-bottom: 0.35rem !important;
-            font-size: 0.72rem !important;
-        }}
+        section[data-testid="stSidebar"] [data-testid="stVerticalBlock"] {
+            gap: 0.28rem !important;
+        }
 
-        section[data-testid="stSidebar"] div[data-testid="stRadio"] label {{
-            font-size: 0.82rem !important;
-        }}
+        section[data-testid="stSidebar"] hr {
+            margin: 0.18rem 0 !important;
+        }
 
-        section[data-testid="stSidebar"] div[data-testid="stSlider"] {{
+        section[data-testid="stSidebar"] div.stButton > button {
+            min-height: 1.9rem !important;
+            height: 1.9rem !important;
+            padding: 0.2rem 0.45rem !important;
+            font-size: 0.68rem !important;
+        }
+
+        section[data-testid="stSidebar"] div[data-testid="stRadio"] label {
+            font-size: 0.76rem !important;
             padding-top: 0 !important;
             padding-bottom: 0 !important;
-        }}
+        }
 
-        @media (max-height: 850px) {{
-            section[data-testid="stSidebar"] {{
-                padding-top: 8px !important;
-                padding-bottom: 8px !important;
-            }}
+        section[data-testid="stSidebar"] div[data-testid="stSelectbox"] {
+            margin-bottom: 0 !important;
+        }
+
+        section[data-testid="stSidebar"] div[data-testid="stSlider"] {
+            padding-top: 0 !important;
+            padding-bottom: 0 !important;
+        }
+
+        section[data-testid="stSidebar"] .hud-card {
+            padding: 8px 10px !important;
+            margin: 4px 0 !important;
+        }
+
+        section[data-testid="stSidebar"] .stMarkdown p {
+            margin-bottom: 0.2rem !important;
+        }
+
+        section[data-testid="stSidebar"] .stMarkdown div[style*="margin-bottom: 14px"] {
+            margin-bottom: 4px !important;
+        }
+
+        @media (max-height: 900px) {
+            section[data-testid="stSidebar"] {
+                padding-top: 6px !important;
+                padding-bottom: 6px !important;
+            }
             section[data-testid="stSidebar"] div[data-testid="stSidebarContent"],
-            section[data-testid="stSidebar"] div[data-testid="stSidebarUserContent"] {{
-                padding-top: 0.45rem !important;
-            }}
-            section[data-testid="stSidebar"] [data-testid="stVerticalBlock"] {{
-                gap: 0.35rem !important;
-            }}
-            section[data-testid="stSidebar"] .hud-card {{
-                padding: 8px 10px !important;
-                margin: 5px 0 !important;
-            }}
-        }}
+            section[data-testid="stSidebar"] div[data-testid="stSidebarUserContent"] {
+                padding-top: 5px !important;
+                padding-bottom: 5px !important;
+            }
+            section[data-testid="stSidebar"] [data-testid="stVerticalBlock"] {
+                gap: 0.2rem !important;
+            }
+            section[data-testid="stSidebar"] .stMarkdown p {
+                font-size: 0.72rem !important;
+                line-height: 1.25 !important;
+            }
+        }
 
         /* ── Buttons ── */
         div.stButton > button {{
