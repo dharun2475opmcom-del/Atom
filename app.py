@@ -139,29 +139,7 @@ with st.sidebar:
     # Operator Profile Card
     render_user_sidebar()
 
-    # B. Navigation Menu
-    st.markdown("<div style='font-size: 0.74rem; font-weight: 700; text-transform: uppercase; color: #94a3b8; letter-spacing: 1.2px; margin: 10px 0 6px 0;'>Navigation</div>", unsafe_allow_html=True)
-
-    nav_options = [
-        "Dashboard",
-        "Live Monitoring",
-        "Filter Health",
-        "RUL Predictions",
-        "Anomaly Detection",
-        "Cleaning Verification",
-        "Explainable AI",
-        "Sensor History",
-        "Settings"
-    ]
-
-    selected_nav = st.radio(
-        "Navigation",
-        nav_options,
-        index=nav_options.index(st.session_state["nav_section"]) if st.session_state["nav_section"] in nav_options else 0,
-        label_visibility="collapsed"
-    )
-    st.session_state["nav_section"] = selected_nav
-
+    # Navigation is displayed horizontally at the top of the main page.
     st.divider()
 
     # C. Simulation Engine Controls
@@ -334,7 +312,42 @@ render_aquaguard_header(
 
 
 # ==================================================
-# 10. NAVIGATION ROUTING
+# 10. TOP DASHBOARD NAVIGATION
+# ==================================================
+
+nav_options = [
+    "Dashboard",
+    "Live Monitoring",
+    "Filter Health",
+    "RUL Predictions",
+    "Anomaly Detection",
+    "Cleaning Verification",
+    "Explainable AI",
+    "Sensor History",
+    "Settings"
+]
+
+st.markdown(
+    "<div style='font-size:0.74rem;font-weight:700;text-transform:uppercase;"
+    "color:#94a3b8;letter-spacing:1.2px;margin:14px 0 6px 0;'>"
+    "AQUAGUARD NAVIGATION</div>",
+    unsafe_allow_html=True
+)
+
+selected_nav = st.radio(
+    "Dashboard navigation",
+    nav_options,
+    index=nav_options.index(st.session_state["nav_section"])
+        if st.session_state["nav_section"] in nav_options else 0,
+    horizontal=True,
+    label_visibility="collapsed",
+    key="top_nav_selector"
+)
+st.session_state["nav_section"] = selected_nav
+
+
+# ==================================================
+# 11. NAVIGATION ROUTING
 # ==================================================
 
 nav = st.session_state["nav_section"]
