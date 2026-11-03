@@ -81,15 +81,54 @@ def inject_custom_css():
     """Injects the 'Let's Get Digital' theme CSS."""
     _render_html(f"""
         <style>
-        /* ── Remove Streamlit's top chrome and reclaim viewport space ── */
-        header[data-testid="stHeader"],
+        /* ── Keep Streamlit header controls available, without the black toolbar ── */
+        header[data-testid="stHeader"] {{
+            display: flex !important;
+            visibility: visible !important;
+            height: 2.5rem !important;
+            min-height: 2.5rem !important;
+            background: transparent !important;
+            box-shadow: none !important;
+            z-index: 10000 !important;
+        }}
+
+        header[data-testid="stHeader"] > div {{
+            background: transparent !important;
+        }}
+
         div[data-testid="stToolbar"],
         div[data-testid="stDecoration"],
         #MainMenu,
         footer {{
             display: none !important;
-            height: 0 !important;
             visibility: hidden !important;
+        }}
+
+        /* The expand/collapse controls must remain visible in both sidebar states. */
+        button[data-testid="stSidebarCollapseButton"],
+        button[data-testid="stSidebarExpandButton"],
+        [data-testid="stSidebarCollapsedControl"] button {{
+            display: inline-flex !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            pointer-events: auto !important;
+            position: relative !important;
+            z-index: 10001 !important;
+            color: #eaf3ff !important;
+            background: rgba(12, 28, 52, 0.92) !important;
+            border: 1px solid rgba(110, 170, 255, 0.35) !important;
+            border-radius: 10px !important;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.28) !important;
+        }}
+
+        [data-testid="stSidebarCollapsedControl"] {{
+            display: flex !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            position: fixed !important;
+            top: 0.55rem !important;
+            left: 0.55rem !important;
+            z-index: 10002 !important;
         }}
 
         [data-testid="stAppViewContainer"] {{
