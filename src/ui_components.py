@@ -6,6 +6,7 @@ Layout: matches the screenshot structure with tabs-based navigation.
 """
 
 import streamlit as st
+import textwrap
 import plotly.graph_objects as go
 import pandas as pd
 import numpy as np
@@ -27,6 +28,13 @@ COLOR_BORDER    = "rgba(255, 255, 255, 0.22)"
 STATUS_NORMAL   = "#10b981"
 STATUS_DEGRADING = "#f59e0b"
 STATUS_CLOGGED  = "#ef4444"
+
+
+def _render_html(markup, sidebar=False):
+    """Dedent custom HTML before passing it to Streamlit Markdown."""
+    target = st.sidebar if sidebar else st
+    target.markdown(textwrap.dedent(markup).strip(), unsafe_allow_html=True)
+
 
 FILTER_SPECS = {
     "sediment": {
@@ -71,7 +79,7 @@ FILTER_SPECS = {
 
 def inject_custom_css():
     """Injects the 'Let's Get Digital' theme CSS."""
-    st.markdown(f"""
+    _render_html(f"""
         <style>
         /* ── Global Background ── */
         .stApp {{
@@ -433,7 +441,7 @@ def inject_custom_css():
             color: #e2e8f0 !important;
         }}
         </style>
-    """, unsafe_allow_html=True)
+    """)
 
 
 # ==================================================
@@ -529,7 +537,7 @@ def render_aquaguard_header(reading, prediction, running: bool,
         sim_dot   = '<span style="width:7px;height:7px;border-radius:50%;background:#f59e0b;display:inline-block;"></span>'
         sim_label = "Simulation Paused"
 
-    st.markdown(f"""
+    _render_html(f"""
         <div class="aq-header-card">
             <div class="aq-logo-row">
                 <span style="font-size:2rem;">💧</span>
@@ -557,7 +565,7 @@ def render_aquaguard_header(reading, prediction, running: bool,
                 </span>
             </div>
         </div>
-    """, unsafe_allow_html=True)
+    """)
 
 
 # ==================================================
@@ -574,7 +582,7 @@ def render_live_filter_hud(prediction: Dict[str, Any]):
     anom_prob = anomaly["probability"] * 100.0
     s_col     = STATUS_NORMAL if status == "Normal" else STATUS_DEGRADING if status == "Degrading" else STATUS_CLOGGED
 
-    st.sidebar.markdown(f"""
+    _render_html(f"""
         <div class="hud-card">
             <div class="hud-header">
                 ⚡ LIVE FILTER PROGNOSIS HUD
@@ -593,7 +601,7 @@ def render_live_filter_hud(prediction: Dict[str, Any]):
                 <span>Anomaly: <strong style="color:#e2e8f0;">{anom_prob:.1f}%</strong></span>
             </div>
         </div>
-    """, unsafe_allow_html=True)
+    """, sidebar=True)
 
 
 # ==================================================
@@ -634,7 +642,7 @@ def render_sensor_monitoring_cards(reading: Dict[str, Any],
     cols = st.columns(4)
     for col, (label, icon, val, unit, spark, status_lbl, status_cls) in zip(cols, sensors):
         with col:
-            st.markdown(f"""
+            _render_html(f"""
                 <div class="sensor-card">
                     <div class="sensor-eyebrow">
                         <span>{label}</span>
@@ -649,7 +657,7 @@ def render_sensor_monitoring_cards(reading: Dict[str, Any],
                         ● {status_lbl}
                     </span></div>
                 </div>
-            """, unsafe_allow_html=True)
+            """)
 
 
 # ==================================================
@@ -682,7 +690,7 @@ def render_ai_prediction_section(prediction: Dict[str, Any],
 
     # Card 1 – Filter Health State
     with cols[0]:
-        st.markdown(f"""
+        _render_html(f"""
             <div class="pred-card">
                 <div class="pred-eyebrow">Filter Health State</div>
                 <div class="pred-value" style="color:{s_col};">{status}</div>
@@ -696,11 +704,11 @@ def render_ai_prediction_section(prediction: Dict[str, Any],
                     <span>Clog: {fault['probabilities']['Clogged']*100:.0f}%</span>
                 </div>
             </div>
-        """, unsafe_allow_html=True)
+        """)
 
     # Card 2 – Remaining Useful Life (RUL)
     with cols[1]:
-        st.markdown(f"""
+        _render_html(f"""
             <div class="pred-card">
                 <div class="pred-eyebrow">Remaining Useful Life (RUL)</div>
                 <div style="display:flex;justify-content:space-between;align-items:center;">
@@ -718,11 +726,11 @@ def render_ai_prediction_section(prediction: Dict[str, Any],
                     Cycle remaining: <strong style="color:#FFFFFF;">{rul_pct:.0f}%</strong>
                 </div>
             </div>
-        """, unsafe_allow_html=True)
+        """)
 
     # Card 3 – Anomaly Detection Probability
     with cols[2]:
-        st.markdown(f"""
+        _render_html(f"""
             <div class="pred-card">
                 <div class="pred-eyebrow">Anomaly Detection Probability</div>
                 <div class="pred-value" style="color:{anom_col};">
@@ -734,7 +742,7 @@ def render_ai_prediction_section(prediction: Dict[str, Any],
                     MTNN Sigmoid Sentinel · Threshold 50%
                 </div>
             </div>
-        """, unsafe_allow_html=True)
+        """)
 
     # Card 4 – Cleaning Verification (only if cleaning event active)
     if cleaning and len(cols) == 4:
@@ -744,7 +752,7 @@ def render_ai_prediction_section(prediction: Dict[str, Any],
         pre_p    = float(reading.get("pre_pressure", 0.0))
         post_p   = float(reading.get("post_pressure", 0.0))
         with cols[3]:
-            st.markdown(f"""
+            _render_html(f"""
                 <div class="pred-card">
                     <div class="pred-eyebrow">Cleaning Verification</div>
                     <div class="pred-value" style="color:{c_col};">{c_status}</div>
@@ -754,7 +762,7 @@ def render_ai_prediction_section(prediction: Dict[str, Any],
                         Pre ΔP: <strong>{pre_p:.2f}</strong> → Post ΔP: <strong>{post_p:.2f}</strong> bar
                     </div>
                 </div>
-            """, unsafe_allow_html=True)
+            """)
 
 
 # ==================================================
@@ -821,7 +829,7 @@ def render_filter_health_cards(simulator, predictor, sim_step: int):
         s_col = STATUS_NORMAL if fault["status"] == "Normal" else STATUS_DEGRADING if fault["status"] == "Degrading" else STATUS_CLOGGED
 
         with col:
-            st.markdown(f"""
+            _render_html(f"""
                 <div class="digital-glass-panel">
                     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
                         <span style="font-size:0.68rem;font-weight:700;color:#94a3b8;
@@ -841,7 +849,7 @@ def render_filter_health_cards(simulator, predictor, sim_step: int):
                         <span>Conf: <strong style="color:#FFFFFF;">{fault['confidence']*100:.0f}%</strong></span>
                     </div>
                 </div>
-            """, unsafe_allow_html=True)
+            """)
 
 
 # ==================================================
@@ -878,12 +886,12 @@ def render_alerts_panel(prediction: Dict[str, Any], reading: Dict[str, Any]):
             accent = "#f59e0b"; bg = "rgba(245,158,11,0.07)"
         else:
             accent = "#10b981"; bg = "rgba(16,185,129,0.07)"
-        st.markdown(f"""
+        _render_html(f"""
             <div class="alert-item" style="background:{bg};border-left:3px solid {accent};">
                 <div class="alert-title"><span>{icon}</span> {title}</div>
                 <div class="alert-desc">{desc}</div>
             </div>
-        """, unsafe_allow_html=True)
+        """)
 
 
 # ==================================================
@@ -891,7 +899,7 @@ def render_alerts_panel(prediction: Dict[str, Any], reading: Dict[str, Any]):
 # ==================================================
 
 def render_explainable_shap_panel(base_dir: Path):
-    st.markdown("""
+    _render_html("""
         <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);
                     border-radius:14px;padding:14px 18px;margin-bottom:18px;">
             <div style="font-size:0.86rem;color:#38bdf8;font-weight:600;">
@@ -904,7 +912,7 @@ def render_explainable_shap_panel(base_dir: Path):
                 while stable baseline flow reinforces the 'Normal' classification.
             </div>
         </div>
-    """, unsafe_allow_html=True)
+    """)
 
     c1, c2 = st.columns(2)
     imp = base_dir / "reports" / "shap_feature_importance.png"
@@ -914,7 +922,7 @@ def render_explainable_shap_panel(base_dir: Path):
                     "text-transform:uppercase;margin-bottom:6px;'>Feature Importance</div>",
                     unsafe_allow_html=True)
         if imp.exists():
-            st.image(str(imp), use_container_width=True)
+            st.image(str(imp), width="stretch")
         else:
             st.info("shap_feature_importance.png not found in reports/")
     with c2:
@@ -922,7 +930,7 @@ def render_explainable_shap_panel(base_dir: Path):
                     "text-transform:uppercase;margin-bottom:6px;'>SHAP Summary Plot</div>",
                     unsafe_allow_html=True)
         if smr.exists():
-            st.image(str(smr), use_container_width=True)
+            st.image(str(smr), width="stretch")
         else:
             st.info("shap_summary.png not found in reports/")
 
@@ -932,7 +940,7 @@ def render_explainable_shap_panel(base_dir: Path):
 # ==================================================
 
 def render_sidebar_status_bottom():
-    st.sidebar.markdown(f"""
+    _render_html(f"""
         <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);
                     border-radius:12px;padding:12px 14px;margin-top:16px;font-size:0.74rem;">
             <div style="font-weight:700;color:rgba(255,255,255,0.55);text-transform:uppercase;
@@ -943,7 +951,7 @@ def render_sidebar_status_bottom():
                 • AI Model: <strong style="color:{STATUS_NORMAL};">ACTIVE (MTNN PyTorch)</strong>
             </div>
         </div>
-    """, unsafe_allow_html=True)
+    """, sidebar=True)
 
 
 # ==================================================
