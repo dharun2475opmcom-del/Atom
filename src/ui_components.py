@@ -81,6 +81,32 @@ def inject_custom_css():
     """Injects the 'Let's Get Digital' theme CSS."""
     _render_html(f"""
         <style>
+        /* ── Remove Streamlit's top chrome and reclaim viewport space ── */
+        header[data-testid="stHeader"],
+        div[data-testid="stToolbar"],
+        div[data-testid="stDecoration"],
+        #MainMenu,
+        footer {{
+            display: none !important;
+            height: 0 !important;
+            visibility: hidden !important;
+        }}
+
+        [data-testid="stAppViewContainer"] {{
+            padding-top: 0 !important;
+        }}
+
+        [data-testid="stMain"] {{
+            padding-top: 0 !important;
+        }}
+
+        .stMainBlockContainer,
+        section.main > div.block-container {{
+            padding-top: 1rem !important;
+            padding-bottom: 1rem !important;
+            max-width: 100% !important;
+        }}
+
         /* ── Global Background ── */
         .stApp {{
             background: radial-gradient(circle at 15% 5%, rgba(0, 102, 255, 0.32) 0%, transparent 42%),
