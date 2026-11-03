@@ -7,6 +7,7 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 from pathlib import Path
+import textwrap
 from datetime import datetime
 from streamlit_autorefresh import st_autorefresh
 
@@ -15,7 +16,7 @@ from src.live_predictor import AquaGuardLivePredictor
 from src.auth_ui import render_auth_page, render_user_sidebar
 from src.ui_components import (
     inject_custom_css,
-    render_digital_hero_banner,
+    render_aquaguard_header,
     render_sensor_monitoring_cards,
     render_ai_prediction_section,
     create_digital_trend_chart,
@@ -40,6 +41,13 @@ st.set_page_config(
 )
 
 BASE_DIR = Path(__file__).resolve().parent
+
+
+def _render_html(markup, sidebar=False):
+    """Render indented HTML without Markdown treating it as a code block."""
+    target = st.sidebar if sidebar else st
+    target.markdown(textwrap.dedent(markup).strip(), unsafe_allow_html=True)
+
 
 
 # ==================================================
@@ -112,7 +120,7 @@ for key, value in defaults.items():
 
 with st.sidebar:
     # A. Brand Header
-    st.markdown("""
+    _render_html("""
         <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 14px; padding: 4px 0;">
             <div style="width: 42px; height: 42px; border-radius: 12px; background: linear-gradient(135deg, #0066FF 0%, #38bdf8 100%); display: flex; align-items: center; justify-content: center; font-size: 1.4rem; box-shadow: 0 6px 18px rgba(0, 102, 255, 0.45);">
                 💧
@@ -126,7 +134,7 @@ with st.sidebar:
                 </div>
             </div>
         </div>
-    """, unsafe_allow_html=True)
+    """)
 
     # Operator Profile Card
     render_user_sidebar()
@@ -187,21 +195,21 @@ with st.sidebar:
         c_p1, c_p2, c_p3 = st.columns([1.2, 1.2, 1])
 
         if not st.session_state.running:
-            if c_p1.button("▶ Start", use_container_width=True):
+            if c_p1.button("▶ Start", width="stretch"):
                 st.session_state.running = True
                 st.rerun()
-            if c_p2.button("⏭ Next", use_container_width=True):
+            if c_p2.button("⏭ Next", width="stretch"):
                 st.session_state.sim_step += 1
                 st.rerun()
         else:
-            if c_p1.button("⏸ Pause", use_container_width=True):
+            if c_p1.button("⏸ Pause", width="stretch"):
                 st.session_state.running = False
                 st.rerun()
-            if c_p2.button("↻ Step 0", use_container_width=True):
+            if c_p2.button("↻ Step 0", width="stretch"):
                 st.session_state.sim_step = 0
                 st.rerun()
 
-        if c_p3.button("🗑 Clear", use_container_width=True):
+        if c_p3.button("🗑 Clear", width="stretch"):
             st.session_state.sensor_history = []
             st.toast("Telemetry buffer cleared")
             st.rerun()
@@ -315,13 +323,13 @@ history_df = pd.DataFrame(st.session_state.sensor_history) if st.session_state.s
 op_hours = float(reading.get("operating_hours", 0.0))
 purifier_unit_id = str(reading.get("purifier_id", "AQG-PRO-2026-X1"))
 
-render_digital_hero_banner(
-    simulation_mode=st.session_state["simulation_mode"],
-    selected_filter=st.session_state["selected_filter"],
+render_aquaguard_header(
+    reading=reading,
+    prediction=prediction,
     running=st.session_state["running"],
     sim_step=st.session_state["sim_step"],
-    operating_hours=op_hours,
-    purifier_id=purifier_unit_id
+    sim_mode=st.session_state["simulation_mode"],
+    chosen_filter=st.session_state["selected_filter"]
 )
 
 
@@ -362,7 +370,7 @@ if nav == "Dashboard":
             )
             st.session_state["trend_metric"] = view_choice
             fig_trend = create_digital_trend_chart(history_df, view_choice)
-            st.plotly_chart(fig_trend, use_container_width=True)
+            st.plotly_chart(fig_trend, width="stretch")
         else:
             st.info("Start simulation to display real-time sensor trajectories.")
 
@@ -385,7 +393,7 @@ if nav == "Dashboard":
         s_col = STATUS_NORMAL if s_fault["status"] == "Normal" else STATUS_DEGRADING if s_fault["status"] == "Degrading" else STATUS_CLOGGED
 
         with col:
-            st.markdown(f"""
+            _render_html(f"""
                 <div class="digital-glass-panel">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
                         <span style="font-size: 0.72rem; font-weight: 700; color: #94a3b8; letter-spacing: 1px;">{stage_spec['stage_num']}</span>
@@ -402,7 +410,7 @@ if nav == "Dashboard":
                         <span>Confidence: <strong style="color: #FFFFFF;">{s_fault['confidence']*100:.0f}%</strong></span>
                     </div>
                 </div>
-            """, unsafe_allow_html=True)
+            """)
 
     st.write("")
 
@@ -416,9 +424,13 @@ if nav == "Dashboard":
             k: (v.item() if isinstance(v, np.generic) else v)
             for k, v in reading.to_dict().items()
         }
-        df_raw = pd.DataFrame([clean_dict]).T.reset_index()
-        df_raw.columns = ["Telemetry Signal", "Transducer Value"]
-        st.dataframe(df_raw, use_container_width=True, hide_index=True)
+        # Telemetry contains numeric readings and text labels. Convert values to
+        # strings so Arrow receives one consistent column type.
+        df_raw = pd.DataFrame({
+            "Telemetry Signal": list(clean_dict.keys()),
+            "Transducer Value": [str(value) for value in clean_dict.values()]
+        })
+        st.dataframe(df_raw, width="stretch", hide_index=True)
 
 
 # --------------------------------------------------
@@ -437,7 +449,7 @@ elif nav == "Live Monitoring":
             horizontal=True
         )
         fig_live = create_digital_trend_chart(history_df, metric_opt)
-        st.plotly_chart(fig_live, use_container_width=True)
+        st.plotly_chart(fig_live, width="stretch")
     else:
         st.info("Start simulation stream to collect sensor observations.")
 
@@ -458,7 +470,7 @@ elif nav == "Filter Health":
         col_st = STATUS_NORMAL if fault["status"] == "Normal" else STATUS_DEGRADING if fault["status"] == "Degrading" else STATUS_CLOGGED
 
         with col:
-            st.markdown(f"""
+            _render_html(f"""
                 <div class="digital-glass-panel">
                     <div style="font-size: 0.72rem; font-weight: 700; color: #94a3b8; text-transform: uppercase;">
                         {spec['stage_num']} &bull; {spec['material']}
@@ -476,7 +488,7 @@ elif nav == "Filter Health":
                         • Projected Life: <strong>~{rul:.0f} days</strong>
                     </div>
                 </div>
-            """, unsafe_allow_html=True)
+            """)
 
 
 # --------------------------------------------------
@@ -490,7 +502,7 @@ elif nav == "RUL Predictions":
 
     c_rul1, c_rul2 = st.columns([1, 1.5])
     with c_rul1:
-        st.markdown(f"""
+        _render_html(f"""
             <div class="digital-glass-panel" style="text-align: center;">
                 <div style="font-size: 0.76rem; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px;">Estimated Remaining Useful Life</div>
                 <div style="font-size: 3.2rem; font-weight: 800; color: {rul_color}; margin: 8px 0;">
@@ -503,10 +515,10 @@ elif nav == "RUL Predictions":
                     Cycle Wear Factor: <strong>{100 - rul_pct:.1f}%</strong>
                 </div>
             </div>
-        """, unsafe_allow_html=True)
+        """)
 
     with c_rul2:
-        st.markdown("""
+        _render_html("""
             <div class="digital-glass-panel">
                 <div style="font-weight: 700; font-size: 1rem; color: #FFFFFF; margin-bottom: 8px;">
                     Maintenance Scheduling Advisory
@@ -518,7 +530,7 @@ elif nav == "RUL Predictions":
                     • <strong>Neural Latent Confidence:</strong> MTNN RUL head normalized against 180-day baseline.
                 </div>
             </div>
-        """, unsafe_allow_html=True)
+        """)
 
 
 # --------------------------------------------------
@@ -533,7 +545,7 @@ elif nav == "Anomaly Detection":
 
     col_a1, col_a2 = st.columns([1, 1.5])
     with col_a1:
-        st.markdown(f"""
+        _render_html(f"""
             <div class="digital-glass-panel" style="text-align: center;">
                 <div style="font-size: 0.76rem; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px;">Neural Anomaly Classifier</div>
                 <div style="font-size: 2.8rem; font-weight: 800; color: {anom_col}; margin: 8px 0;">
@@ -546,10 +558,10 @@ elif nav == "Anomaly Detection":
                     Threshold: 50.0% Sigmoid Boundary
                 </div>
             </div>
-        """, unsafe_allow_html=True)
+        """)
 
     with col_a2:
-        st.markdown("""
+        _render_html("""
             <div class="digital-glass-panel">
                 <div style="font-weight: 700; font-size: 1rem; color: #FFFFFF; margin-bottom: 8px;">
                     Transducer Verification Analysis
@@ -558,7 +570,7 @@ elif nav == "Anomaly Detection":
                     The MTNN anomaly detection branch isolates multivariate sensor incongruities, such as sudden pressure drops without flow increases or high turbidity spikes without corresponding pre-filter delta.
                 </div>
             </div>
-        """, unsafe_allow_html=True)
+        """)
 
 
 # --------------------------------------------------
@@ -578,7 +590,7 @@ elif nav == "Cleaning Verification":
 
         c1, c2 = st.columns(2)
         with c1:
-            st.markdown(f"""
+            _render_html(f"""
                 <div class="digital-glass-panel">
                     <div style="font-size: 0.76rem; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px;">Cleaning Outcome</div>
                     <div style="font-size: 2.4rem; font-weight: 800; color: {c_col}; margin: 6px 0;">
@@ -588,10 +600,10 @@ elif nav == "Cleaning Verification":
                         Recovery Efficiency: <strong>{cleaning['probabilities'].get(c_status, 1.0)*100:.1f}%</strong>
                     </div>
                 </div>
-            """, unsafe_allow_html=True)
+            """)
 
         with c2:
-            st.markdown(f"""
+            _render_html(f"""
                 <div class="digital-glass-panel">
                     <div style="font-size: 0.76rem; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px;">Pre vs Post Dynamics</div>
                     <div style="font-size: 0.85rem; color: #cbd5e1; line-height: 1.6; margin-top: 6px;">
@@ -600,7 +612,7 @@ elif nav == "Cleaning Verification":
                         • Permeability Recovery: <strong>{max(0.0, (pre_p - post_p)/pre_p * 100 if pre_p > 0 else 0):.1f}%</strong>
                     </div>
                 </div>
-            """, unsafe_allow_html=True)
+            """)
     else:
         st.info("No active cleaning event in the current telemetry frame. Switch to 'Scenario-Based Simulation' and select 'Cleaning' in the sidebar to simulate restorative backwash.")
 
@@ -619,8 +631,8 @@ elif nav == "Explainable AI":
 elif nav == "Sensor History":
     st.markdown("### 📈 Sensor History Telemetry Log")
     if not history_df.empty:
-        st.plotly_chart(create_digital_trend_chart(history_df, "All Sensors"), use_container_width=True)
-        st.dataframe(history_df, use_container_width=True, hide_index=True)
+        st.plotly_chart(create_digital_trend_chart(history_df, "All Sensors"), width="stretch")
+        st.dataframe(history_df, width="stretch", hide_index=True)
     else:
         st.info("No sensor history recorded yet. Start simulation stream from sidebar.")
 
@@ -630,7 +642,7 @@ elif nav == "Sensor History":
 # --------------------------------------------------
 elif nav == "Settings":
     st.markdown("### ⚙️ System Settings & Calibrations")
-    st.markdown("""
+    _render_html("""
         <div class="digital-glass-panel">
             <div style="font-weight: 800; font-size: 1.1rem; color: #FFFFFF; margin-bottom: 6px;">AquaGuard Purifier Calibration Profile</div>
             <div style="font-size: 0.84rem; color: #cbd5e1; line-height: 1.6;">
@@ -641,7 +653,7 @@ elif nav == "Settings":
                 • Theme: <code>'Let's Get Digital' Frosted Glassmorphism</code>
             </div>
         </div>
-    """, unsafe_allow_html=True)
+    """)
 
 
 # ==================================================
@@ -650,11 +662,11 @@ elif nav == "Settings":
 
 st.divider()
 
-st.markdown("""
+_render_html("""
     <div style="text-align: center; color: #94a3b8; font-size: 0.8rem; padding: 12px 0;">
         AquaGuard &bull; Intelligent Water Purifier Prognostics Lab<br>
         <span style="font-size: 0.74rem; color: rgba(255, 255, 255, 0.45);">
             Multi-Task Neural Network &bull; Virtual IoT Transducers &bull; SHAP Explainability Engine
         </span>
     </div>
-""", unsafe_allow_html=True)
+""")
