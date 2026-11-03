@@ -506,6 +506,48 @@ def inject_custom_css():
             }}
         }}
 
+        /* Comfortable spacing between sidebar controls */
+        section[data-testid="stSidebar"] [data-testid="stVerticalBlock"] {{
+            gap: 0.62rem !important;
+        }}
+        section[data-testid="stSidebar"] .stMarkdown p {{
+            margin-top: 0.18rem !important;
+            margin-bottom: 0.38rem !important;
+            line-height: 1.42 !important;
+        }}
+        section[data-testid="stSidebar"] [data-testid="stRadio"] {{
+            margin-top: 0.12rem !important;
+            margin-bottom: 0.42rem !important;
+        }}
+        section[data-testid="stSidebar"] [data-testid="stRadio"] div[role="radiogroup"] {{
+            gap: 0.36rem !important;
+        }}
+        section[data-testid="stSidebar"] [data-testid="stSelectbox"] {{
+            margin-top: 0.12rem !important;
+            margin-bottom: 0.38rem !important;
+        }}
+        section[data-testid="stSidebar"] [data-testid="stSlider"] {{
+            margin-top: 0.18rem !important;
+            margin-bottom: 0.45rem !important;
+        }}
+        section[data-testid="stSidebar"] hr {{
+            margin-top: 0.42rem !important;
+            margin-bottom: 0.42rem !important;
+        }}
+        section[data-testid="stSidebar"] .stButton {{
+            margin-top: 0.12rem !important;
+            margin-bottom: 0.22rem !important;
+        }}
+        section[data-testid="stSidebar"] [data-testid="stHorizontalBlock"] {{
+            gap: 0.42rem !important;
+            margin-top: 0.18rem !important;
+            margin-bottom: 0.28rem !important;
+        }}
+        @media (max-height: 900px) {{
+            section[data-testid="stSidebar"] [data-testid="stVerticalBlock"] {{ gap: 0.48rem !important; }}
+            section[data-testid="stSidebar"] .stMarkdown p {{ margin-bottom: 0.28rem !important; line-height: 1.35 !important; }}
+        }}
+
         /* ── Buttons ── */
         div.stButton > button {{
             background: #0066FF !important;
