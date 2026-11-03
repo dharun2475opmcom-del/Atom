@@ -96,7 +96,20 @@ def inject_custom_css():
             background: transparent !important;
         }}
 
-        div[data-testid="stToolbar"],
+        /* Keep Streamlit's toolbar container alive: it hosts the collapsed-sidebar opener. */
+        div[data-testid="stToolbar"] {{
+            display: flex !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            pointer-events: auto !important;
+            background: transparent !important;
+            box-shadow: none !important;
+        }}
+
+        /* Hide only the unwanted toolbar actions, never the toolbar itself. */
+        [data-testid="stDeployButton"],
+        button[aria-label="Main menu"],
+        button[title="Main menu"],
         div[data-testid="stDecoration"],
         #MainMenu,
         footer {{
