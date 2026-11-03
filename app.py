@@ -136,9 +136,6 @@ with st.sidebar:
         </div>
     """)
 
-    # Operator Profile Card
-    render_user_sidebar()
-
     # Navigation is displayed horizontally at the top of the main page.
     st.divider()
 
@@ -247,6 +244,8 @@ with st.sidebar:
         )
 
     render_sidebar_status_bottom()
+    # Keep the signed-in account details anchored at the bottom of the sidebar.
+    render_user_sidebar()
 
 
 # ==================================================
