@@ -263,32 +263,53 @@ def render_auth_page():
                         st.error(f"{msg}")
 
 
-def render_user_sidebar():
-    """Renders the operator profile badge and logout button in the sidebar."""
+def render_user_sidebar(in_sidebar=False):
+    """Render the signed-in operator panel in the page's top-right corner."""
     user = st.session_state.get("user", {})
     username = user.get("username", "Operator")
     full_name = user.get("full_name") or username
     role = user.get("role", "operator").capitalize()
     last_login = user.get("last_login", datetime.now().strftime("%Y-%m-%d %H:%M"))
 
-    st.sidebar.markdown(f"""
-        <div style="background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.18); border-radius: 14px; padding: 12px 14px; margin-bottom: 14px; backdrop-filter: blur(14px);">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
-                <span style="font-weight: 700; font-size: 0.95rem; color: #FFFFFF;">{full_name}</span>
-                <span style="background: #0066FF; color: #FFFFFF; padding: 2px 8px; border-radius: 9999px; font-size: 0.68rem; font-weight: 700; text-transform: uppercase;">{role}</span>
+    if in_sidebar:
+        target = st.sidebar
+        target.markdown(f"""
+            <div style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.18);
+                        border-radius:14px;padding:10px 12px;margin:6px 0;backdrop-filter:blur(14px);">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+                    <span style="font-weight:700;font-size:0.9rem;color:#fff;">{full_name}</span>
+                    <span style="background:#0066FF;color:#fff;padding:2px 8px;border-radius:999px;
+                                 font-size:0.65rem;font-weight:700;text-transform:uppercase;">{role}</span>
+                </div>
+                <div style="font-size:0.75rem;color:#94a3b8;">@{username}</div>
+                <div style="font-size:0.68rem;color:#64748b;margin-top:4px;">Last Login: {last_login}</div>
             </div>
-            <div style="font-size: 0.78rem; color: #94a3b8; margin-bottom: 6px;">@{username}</div>
-            <div style="font-size: 0.72rem; color: #10b981; display: flex; align-items: center; gap: 5px;">
-                <span style="display:inline-block; width:6px; height:6px; border-radius:50%; background:#10b981; box-shadow:0 0 6px #10b981;"></span> Telemetry Connected
+        """, unsafe_allow_html=True)
+        if target.button("Sign Out", use_container_width=True, key="sidebar_sign_out"):
+            st.session_state["authenticated"] = False
+            st.session_state["user"] = None
+            st.session_state["running"] = False
+            st.rerun()
+        return
+
+    spacer, operator_col = st.columns([5.2, 2.1], vertical_alignment="center")
+    with operator_col:
+        st.markdown(f"""
+            <div style="background:rgba(12,28,52,0.78);border:1px solid rgba(125,180,255,0.24);
+                        border-radius:14px;padding:9px 12px 7px 12px;margin:0 0 5px 0;
+                        backdrop-filter:blur(16px);">
+                <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
+                    <span style="font-weight:750;font-size:0.88rem;color:#fff;">{full_name}</span>
+                    <span style="background:#0066FF;color:#fff;padding:2px 8px;border-radius:999px;
+                                 font-size:0.62rem;font-weight:700;text-transform:uppercase;">{role}</span>
+                </div>
+                <div style="font-size:0.72rem;color:#94a3b8;margin-top:3px;">
+                    @{username} <span style="color:#64748b;">· Last login: {last_login}</span>
+                </div>
             </div>
-            <div style="font-size: 0.7rem; color: #64748b; margin-top: 4px;">Last Login: {last_login}</div>
-        </div>
-    """, unsafe_allow_html=True)
-
-    if st.sidebar.button("Sign Out", use_container_width=True):
-        st.session_state["authenticated"] = False
-        st.session_state["user"] = None
-        st.session_state["running"] = False
-        st.rerun()
-
-    st.sidebar.divider()
+        """, unsafe_allow_html=True)
+        if st.button("Sign Out", use_container_width=True, key="top_operator_sign_out"):
+            st.session_state["authenticated"] = False
+            st.session_state["user"] = None
+            st.session_state["running"] = False
+            st.rerun()
