@@ -28,24 +28,46 @@ def render_auth_page():
                 linear-gradient(135deg,#06152d 0%,#07101f 55%,#020711 100%) !important;
             color:#f8fbff !important;
         }
+        /* Authentication is a full-screen experience: remove Streamlit's top chrome. */
+        header[data-testid="stHeader"],
+        div[data-testid="stToolbar"],
+        div[data-testid="stDecoration"],
+        [data-testid="stDeployButton"],
+        #MainMenu, footer {
+            display: none !important;
+            visibility: hidden !important;
+            height: 0 !important;
+        }
+        [data-testid="stAppViewContainer"],
+        [data-testid="stAppViewBlockContainer"],
+        section.main {
+            padding-top: 0 !important;
+            margin-top: 0 !important;
+        }
         .stMainBlockContainer, section.main > div.block-container {
+            width: 100% !important;
             max-width: 1480px !important;
-            padding: 2.2rem 2.4rem 2rem !important;
+            padding: .75rem 1.5rem !important;
+            margin: 0 auto !important;
+        }
+        html, body, [data-testid="stAppViewContainer"] {
+            overflow-x: hidden !important;
         }
         .auth-left-panel {
-            min-height: 690px;
-            height: 100%;
+            min-height: 0;
+            height: calc(100vh - 2rem);
+            max-height: 760px;
             position: relative;
             overflow: hidden;
             border: 1px solid rgba(56,161,255,.55);
             border-radius: 28px;
-            padding: 42px 42px 34px;
+            padding: clamp(22px,3vh,34px) clamp(24px,3vw,38px);
             background:
                 radial-gradient(circle at 78% 42%,rgba(0,153,255,.30),transparent 36%),
                 linear-gradient(145deg,rgba(3,37,82,.94),rgba(4,20,45,.96) 62%,rgba(2,12,29,.98));
             box-shadow: 0 24px 70px rgba(0,0,0,.36),inset 0 1px 0 rgba(255,255,255,.12);
         }
-        .auth-brand {display:flex;align-items:center;gap:18px;margin-bottom:54px;}
+        .auth-brand {display:flex;align-items:center;gap:16px;margin-bottom:clamp(22px,4vh,40px);}
         .auth-brand-mark {
             width:64px;height:72px;display:flex;align-items:center;justify-content:center;
             font-size:3.4rem;filter:drop-shadow(0 0 18px rgba(0,174,255,.85));
@@ -84,7 +106,7 @@ def render_auth_page():
         .auth-feature-title {font-weight:750;color:#f4f8ff;font-size:.95rem;}
         .auth-feature-copy {color:#a9c0dc;font-size:.79rem;margin-top:3px;}
         .auth-purifier-art {
-            position:absolute;right:25px;top:220px;width:220px;height:350px;
+            position:absolute;right:12px;top:205px;width:190px;height:310px;
             opacity:.88;pointer-events:none;filter:drop-shadow(0 18px 35px rgba(0,140,255,.3));
         }
         .auth-purifier-body {
@@ -112,12 +134,12 @@ def render_auth_page():
             border-radius:50%;transform:rotate(-23deg);box-shadow:0 0 24px rgba(0,155,255,.18);
         }
         .auth-bottom-note {
-            position:absolute;left:42px;right:42px;bottom:28px;padding:14px 18px;
+            position:absolute;left:clamp(22px,3vw,38px);right:clamp(22px,3vw,38px);bottom:18px;padding:11px 15px;
             border-radius:13px;border:1px solid rgba(76,175,255,.28);
             background:rgba(0,112,210,.12);color:#8edfff;font-style:italic;font-weight:700;
         }
         div[data-testid="stHorizontalBlock"] > div[data-testid="column"]:nth-child(2) > div[data-testid="stVerticalBlock"] {
-            min-height:690px;padding:40px 34px 30px;border:1px solid rgba(112,184,255,.34);
+            min-height:0;height:calc(100vh - 2rem);max-height:760px;padding:clamp(20px,3vh,32px) clamp(20px,2.5vw,30px);border:1px solid rgba(112,184,255,.34);
             border-radius:28px;background:linear-gradient(145deg,rgba(255,255,255,.105),rgba(255,255,255,.035));
             box-shadow:0 24px 70px rgba(0,0,0,.38),inset 0 1px 0 rgba(255,255,255,.14);
             backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
@@ -135,14 +157,14 @@ def render_auth_page():
         }
         div[data-testid="stRadio"] > label {display:none !important;}
         div[data-testid="stRadio"] div[role="radiogroup"] {
-            display:flex !important;gap:0 !important;padding:5px !important;
+            display:flex !important;gap:0 !important;padding:4px !important;
             border-radius:999px !important;background:rgba(3,17,39,.78) !important;
             border:1px solid rgba(111,178,255,.3) !important;
-            margin:0 auto 28px !important;width:100% !important;
+            margin:0 auto 18px !important;width:100% !important;
         }
         div[data-testid="stRadio"] div[role="radiogroup"] label {
             flex:1 !important;justify-content:center !important;text-align:center !important;
-            border-radius:999px !important;padding:10px 12px !important;
+            border-radius:999px !important;padding:8px 12px !important;
             color:#c7d8ee !important;font-weight:750 !important;
             border:0 !important;background:transparent !important;
         }
@@ -175,13 +197,35 @@ def render_auth_page():
             border-radius:11px;background:rgba(0,12,30,.28);
         }
         @media(max-width:1050px) {
-            .auth-left-panel {min-height:auto;}
+            .auth-left-panel {min-height:0;height:auto;max-height:none;padding:26px 24px 72px;}
             div[data-testid="stHorizontalBlock"] > div[data-testid="column"]:nth-child(2) > div[data-testid="stVerticalBlock"] {
-                min-height:auto;padding:30px 24px;
+                min-height:0;height:auto;max-height:none;padding:26px 22px;
             }
-            .auth-purifier-art {opacity:.24;right:0;top:190px;}
-            .auth-bottom-note {position:relative;left:auto;right:auto;bottom:auto;margin-top:28px;}
-            .auth-left-panel {padding:30px 26px;}
+            .auth-purifier-art {opacity:.18;right:0;top:170px;transform:scale(.82);transform-origin:top right;}
+            .auth-bottom-note {position:absolute;left:24px;right:24px;bottom:16px;margin:0;}
+        }
+        @media(max-height:800px) and (min-width:1051px) {
+            .stMainBlockContainer, section.main > div.block-container {padding-top:.35rem !important;padding-bottom:.35rem !important;}
+            .auth-left-panel {height:calc(100vh - 1rem);padding-top:20px;padding-bottom:20px;}
+            div[data-testid="stHorizontalBlock"] > div[data-testid="column"]:nth-child(2) > div[data-testid="stVerticalBlock"] {
+                height:calc(100vh - 1rem);padding-top:18px;padding-bottom:18px;
+            }
+            .auth-brand {margin-bottom:20px;}
+            .auth-feature {margin:12px 0;}
+            .auth-left-copy {margin-bottom:18px;}
+            .auth-purifier-art {top:190px;transform:scale(.78);transform-origin:top right;opacity:.72;}
+            .auth-bottom-note {bottom:12px;padding:9px 13px;}
+        }
+        @media(max-height:700px) and (min-width:1051px) {
+            .auth-left-panel, div[data-testid="stHorizontalBlock"] > div[data-testid="column"]:nth-child(2) > div[data-testid="stVerticalBlock"] {
+                height:calc(100vh - .5rem);padding-top:12px;padding-bottom:12px;
+            }
+            .auth-brand {margin-bottom:12px;}
+            .auth-brand-mark {height:52px;font-size:2.6rem;}
+            .auth-brand-name {font-size:2.2rem;}
+            .auth-feature {margin:8px 0;}
+            .auth-feature-icon {width:38px;height:38px;flex-basis:38px;}
+            .auth-purifier-art {opacity:.45;transform:scale(.62);}
         }
         </style>
     """, unsafe_allow_html=True)
