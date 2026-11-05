@@ -491,9 +491,9 @@ def inject_custom_css():
             gap: 0.28rem !important;
         }}
 
-        /* The profile card is the second-last sidebar block; push it and Sign Out down. */
-        section[data-testid="stSidebar"] [data-testid="stSidebarUserContent"] > div[data-testid="stVerticalBlock"] > div:nth-last-child(2) {{
-            margin-top: auto !important;
+        /* Sidebar starts with the AquaGuard brand; keep the brand at the top. */
+        section[data-testid="stSidebar"] [data-testid="stSidebarUserContent"] > div[data-testid="stVerticalBlock"] {{
+            justify-content: flex-start !important;
         }}
 
         section[data-testid="stSidebar"] [data-testid="stVerticalBlock"] {{
