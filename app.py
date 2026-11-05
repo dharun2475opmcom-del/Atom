@@ -22,7 +22,6 @@ from src.ui_components import (
     create_digital_trend_chart,
     render_alerts_panel,
     render_explainable_shap_panel,
-    render_sidebar_status_bottom,
     FILTER_SPECS,
     STATUS_NORMAL,
     STATUS_DEGRADING,
@@ -243,9 +242,6 @@ with st.sidebar:
             cleaning_outcome=cleaning_outcome
         )
 
-    render_sidebar_status_bottom()
-    # Keep the signed-in account details anchored at the bottom of the sidebar.
-    render_user_sidebar()
 
 
 # ==================================================
@@ -299,6 +295,9 @@ history_df = pd.DataFrame(st.session_state.sensor_history) if st.session_state.s
 
 op_hours = float(reading.get("operating_hours", 0.0))
 purifier_unit_id = str(reading.get("purifier_id", "AQG-PRO-2026-X1"))
+
+# Signed-in operator details are shown at the top-right of the dashboard.
+render_user_sidebar(in_sidebar=False)
 
 render_aquaguard_header(
     reading=reading,
