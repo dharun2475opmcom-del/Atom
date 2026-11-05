@@ -660,6 +660,141 @@ def inject_custom_css():
             border-radius: 10px !important;
             color: #e2e8f0 !important;
         }}
+
+        /* AQUAGUARD PREMIUM: NAVY / BLACK GLASSMORPHISM */
+        :root {{
+            color-scheme: dark;
+            --aq-navy: #07152b;
+            --aq-black: #020711;
+            --aq-glass: rgba(10, 27, 51, .76);
+            --aq-border: rgba(105, 174, 255, .22);
+            --aq-blue: #168cff;
+            --aq-cyan: #31d5ff;
+        }}
+        .stApp {{
+            background:
+                radial-gradient(ellipse at 12% 0%, rgba(0,83,190,.25), transparent 36%),
+                radial-gradient(ellipse at 92% 12%, rgba(0,177,255,.12), transparent 30%),
+                linear-gradient(145deg,#07162d 0%,#030914 52%,#01040a 100%) !important;
+            color:#edf5ff !important;
+        }}
+        [data-testid="stAppViewContainer"] {{ background:transparent !important; }}
+        .stMainBlockContainer, section.main > div.block-container {{
+            max-width:100% !important; padding:1.1rem 1.55rem 2rem !important;
+        }}
+        header[data-testid="stHeader"] {{
+            height:2.2rem !important; min-height:2.2rem !important;
+            background:rgba(2,8,18,.40) !important; backdrop-filter:blur(18px) !important;
+            border-bottom:1px solid rgba(108,168,235,.08) !important;
+        }}
+        header[data-testid="stHeader"] > div, div[data-testid="stToolbar"] {{ background:transparent !important; }}
+        [data-testid="stDeployButton"], div[data-testid="stDecoration"], #MainMenu, footer {{ display:none !important; }}
+
+        section[data-testid="stSidebar"] {{
+            min-width:292px !important; max-width:292px !important;
+            padding:10px 0 10px 14px !important; background:transparent !important;
+        }}
+        section[data-testid="stSidebar"] > div {{
+            height:calc(100dvh - 20px) !important; max-height:calc(100dvh - 20px) !important;
+            border:1px solid rgba(110,174,255,.22) !important; border-radius:22px !important;
+            background:linear-gradient(165deg,rgba(10,29,55,.95),rgba(2,8,19,.97)) !important;
+            box-shadow:0 22px 60px rgba(0,0,0,.48),inset 0 1px 0 rgba(255,255,255,.07) !important;
+            backdrop-filter:blur(26px) saturate(140%) !important;
+            -webkit-backdrop-filter:blur(26px) saturate(140%) !important; overflow:hidden !important;
+        }}
+        section[data-testid="stSidebar"] div[data-testid="stSidebarContent"],
+        section[data-testid="stSidebar"] div[data-testid="stSidebarUserContent"] {{
+            overflow-y:auto !important; scrollbar-width:thin !important;
+            scrollbar-color:rgba(70,145,220,.32) transparent !important; padding:13px 12px !important;
+        }}
+        section[data-testid="stSidebar"] [data-testid="stVerticalBlock"] {{ gap:.48rem !important; }}
+        section[data-testid="stSidebar"] hr {{ border-color:rgba(115,166,225,.16) !important; margin:.42rem 0 !important; }}
+        section[data-testid="stSidebar"] label {{ color:#dceaff !important; font-weight:600 !important; }}
+
+        .digital-glass-panel,.sensor-card,.pred-card {{
+            background:linear-gradient(145deg,rgba(17,42,73,.78),rgba(5,13,27,.84)) !important;
+            border:1px solid rgba(102,173,255,.20) !important; border-radius:18px !important;
+            box-shadow:0 14px 38px rgba(0,0,0,.36),inset 0 1px 0 rgba(255,255,255,.075) !important;
+            backdrop-filter:blur(22px) saturate(135%) !important;
+            -webkit-backdrop-filter:blur(22px) saturate(135%) !important;
+            transition:transform .22s ease,border-color .22s ease,box-shadow .22s ease !important;
+        }}
+        .digital-glass-panel:hover,.sensor-card:hover,.pred-card:hover {{
+            transform:translateY(-3px) !important; border-color:rgba(49,180,255,.48) !important;
+            box-shadow:0 18px 42px rgba(0,91,210,.18),inset 0 1px 0 rgba(255,255,255,.10) !important;
+        }}
+        .aq-header-card {{
+            background:linear-gradient(115deg,rgba(8,35,74,.88),rgba(5,16,32,.84) 58%,rgba(0,80,139,.25)) !important;
+            border:1px solid rgba(61,151,255,.36) !important; border-radius:22px !important;
+            box-shadow:0 20px 55px rgba(0,0,0,.38),inset 0 1px 0 rgba(255,255,255,.10) !important;
+            backdrop-filter:blur(26px) saturate(145%) !important;
+        }}
+        .aq-logo-title {{ letter-spacing:-1.2px !important; }}
+        .aq-status-pill {{
+            background:rgba(13,34,59,.76) !important; border-color:rgba(121,174,237,.22) !important;
+            color:#d5e5fa !important; backdrop-filter:blur(12px);
+        }}
+
+        /* Horizontal navigation becomes a premium segmented glass bar */
+        div[data-testid="stRadio"] > label {{ display:none !important; }}
+        div[data-testid="stRadio"] div[role="radiogroup"] {{
+            display:flex !important; flex-wrap:wrap !important; gap:7px !important; padding:7px !important;
+            border:1px solid rgba(100,163,226,.19) !important; border-radius:16px !important;
+            background:rgba(3,11,23,.62) !important;
+            box-shadow:inset 0 1px 0 rgba(255,255,255,.035),0 10px 28px rgba(0,0,0,.2) !important;
+            backdrop-filter:blur(20px) !important;
+        }}
+        div[data-testid="stRadio"] div[role="radiogroup"] label {{
+            flex:0 0 auto !important; border:1px solid transparent !important;
+            border-radius:11px !important; padding:8px 12px !important; margin:0 !important;
+            color:#9fb4d0 !important; background:transparent !important; transition:all .18s ease !important;
+        }}
+        div[data-testid="stRadio"] div[role="radiogroup"] label:hover {{
+            color:#eaf6ff !important; background:rgba(29,91,157,.22) !important;
+            border-color:rgba(81,159,244,.20) !important;
+        }}
+        div[data-testid="stRadio"] div[role="radiogroup"] label:has(input:checked) {{
+            color:#fff !important;
+            background:linear-gradient(110deg,rgba(0,103,230,.94),rgba(0,174,232,.72)) !important;
+            border-color:rgba(92,190,255,.52) !important;
+            box-shadow:0 5px 18px rgba(0,115,255,.27),inset 0 1px 0 rgba(255,255,255,.18) !important;
+        }}
+        div[data-testid="stRadio"] div[role="radiogroup"] label > div:first-child {{ display:none !important; }}
+
+        .stButton > button,.stFormSubmitButton > button {{
+            border:1px solid rgba(74,157,255,.44) !important; border-radius:12px !important;
+            color:#f4f9ff !important;
+            background:linear-gradient(115deg,rgba(0,104,235,.97),rgba(0,159,226,.90)) !important;
+            box-shadow:0 8px 22px rgba(0,91,210,.22),inset 0 1px 0 rgba(255,255,255,.18) !important;
+            font-weight:700 !important; transition:transform .18s ease,box-shadow .18s ease !important;
+        }}
+        .stButton > button:hover,.stFormSubmitButton > button:hover {{
+            transform:translateY(-1px) !important; box-shadow:0 12px 26px rgba(0,119,255,.31) !important;
+            border-color:rgba(102,194,255,.72) !important;
+        }}
+        div[data-baseweb="select"] > div,div[data-baseweb="input"] > div,div[data-baseweb="textarea"] > div {{
+            background:rgba(3,13,28,.80) !important; border:1px solid rgba(106,164,228,.26) !important;
+            border-radius:11px !important; color:#edf6ff !important;
+        }}
+        input,textarea {{ color:#edf6ff !important; }}
+        details[data-testid="stExpander"] {{
+            border:1px solid rgba(102,173,255,.19) !important; border-radius:15px !important;
+            background:rgba(7,20,39,.62) !important; backdrop-filter:blur(18px) !important;
+        }}
+        [data-testid="stDataFrame"],[data-testid="stTable"] {{
+            border:1px solid rgba(102,173,255,.18) !important; border-radius:14px !important; overflow:hidden !important;
+        }}
+        [data-testid="stAlert"] {{
+            border-radius:14px !important; background:rgba(8,26,49,.80) !important;
+            border:1px solid rgba(100,170,245,.23) !important;
+        }}
+        @media(max-width:900px) {{
+            .stMainBlockContainer,section.main > div.block-container {{ padding:.8rem .85rem 1.5rem !important; }}
+            section[data-testid="stSidebar"] {{ min-width:min(292px,86vw) !important; max-width:min(292px,86vw) !important; }}
+            .aq-logo-title {{ font-size:1.9rem !important; }}
+            div[data-testid="stRadio"] div[role="radiogroup"] label {{ padding:7px 9px !important; font-size:.78rem !important; }}
+        }}
+
         </style>
     """)
 
