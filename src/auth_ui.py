@@ -116,10 +116,9 @@ def render_auth_page():
             border-radius:13px;border:1px solid rgba(76,175,255,.28);
             background:rgba(0,112,210,.12);color:#8edfff;font-style:italic;font-weight:700;
         }
-        .auth-right-panel {
-            min-height:690px;height:100%;padding:40px 34px 30px;
-            border:1px solid rgba(112,184,255,.34);border-radius:28px;
-            background:linear-gradient(145deg,rgba(255,255,255,.105),rgba(255,255,255,.035));
+        div[data-testid="stHorizontalBlock"] > div[data-testid="column"]:nth-child(2) > div[data-testid="stVerticalBlock"] {
+            min-height:690px;padding:40px 34px 30px;border:1px solid rgba(112,184,255,.34);
+            border-radius:28px;background:linear-gradient(145deg,rgba(255,255,255,.105),rgba(255,255,255,.035));
             box-shadow:0 24px 70px rgba(0,0,0,.38),inset 0 1px 0 rgba(255,255,255,.14);
             backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
         }
@@ -152,20 +151,22 @@ def render_auth_page():
             box-shadow:0 5px 18px rgba(0,119,255,.35) !important;
         }
         div[data-testid="stRadio"] div[role="radiogroup"] label > div:first-child {display:none !important;}
-        .auth-right-panel label {color:#e8f2ff !important;font-weight:650 !important;}
-        .auth-right-panel input {
+        div[data-testid="stHorizontalBlock"] > div[data-testid="column"]:nth-child(2) label {color:#e8f2ff !important;font-weight:650 !important;}
+        div[data-testid="stHorizontalBlock"] > div[data-testid="column"]:nth-child(2) input {
             background:rgba(3,18,42,.72) !important;border:1px solid rgba(105,171,245,.32) !important;
             border-radius:11px !important;color:#fff !important;
         }
-        .auth-right-panel input:focus {border-color:#159cff !important;box-shadow:0 0 0 2px rgba(21,156,255,.14) !important;}
-        .auth-right-panel button[kind="primaryFormSubmit"],
-        .auth-right-panel button[kind="primary"] {
+        div[data-testid="stHorizontalBlock"] > div[data-testid="column"]:nth-child(2) input:focus {
+            border-color:#159cff !important;box-shadow:0 0 0 2px rgba(21,156,255,.14) !important;
+        }
+        div[data-testid="stHorizontalBlock"] > div[data-testid="column"]:nth-child(2) button[kind="primaryFormSubmit"],
+        div[data-testid="stHorizontalBlock"] > div[data-testid="column"]:nth-child(2) button[kind="primary"] {
             background:linear-gradient(100deg,#0877ff,#009dff) !important;
             color:#fff !important;border:0 !important;border-radius:11px !important;
             min-height:48px !important;font-weight:800 !important;
             box-shadow:0 9px 24px rgba(0,112,255,.28) !important;
         }
-        .auth-right-panel div[data-testid="stForm"] {
+        div[data-testid="stHorizontalBlock"] > div[data-testid="column"]:nth-child(2) div[data-testid="stForm"] {
             border:0 !important;padding:0 !important;background:transparent !important;
         }
         .auth-demo-note {
@@ -174,11 +175,13 @@ def render_auth_page():
             border-radius:11px;background:rgba(0,12,30,.28);
         }
         @media(max-width:1050px) {
-            .auth-left-panel,.auth-right-panel {min-height:auto;}
+            .auth-left-panel {min-height:auto;}
+            div[data-testid="stHorizontalBlock"] > div[data-testid="column"]:nth-child(2) > div[data-testid="stVerticalBlock"] {
+                min-height:auto;padding:30px 24px;
+            }
             .auth-purifier-art {opacity:.24;right:0;top:190px;}
             .auth-bottom-note {position:relative;left:auto;right:auto;bottom:auto;margin-top:28px;}
             .auth-left-panel {padding:30px 26px;}
-            .auth-right-panel {padding:30px 24px;}
         }
         </style>
     """, unsafe_allow_html=True)
@@ -232,7 +235,7 @@ def render_auth_page():
 
     with right_col:
         st.markdown("""
-            <div class="auth-right-panel">
+            <div>
                 <div class="auth-right-eyebrow">Welcome to AquaGuard</div>
                 <div class="auth-right-title">Access Your Dashboard</div>
                 <div class="auth-right-copy">Sign in to continue or create a new operator account.</div>
@@ -246,9 +249,6 @@ def render_auth_page():
             label_visibility="collapsed",
             key="auth_mode_toggle"
         )
-
-        # Form controls sit in the same right-side glass panel area.
-        st.markdown('<div class="auth-right-panel" style="min-height:0;margin-top:-1.1rem;padding-top:0;border-top:0;border-radius:0 0 28px 28px;">', unsafe_allow_html=True)
 
         if auth_mode == "Login":
             with st.form("login_form", clear_on_submit=False):
@@ -346,8 +346,7 @@ def render_auth_page():
                     else:
                         st.error(msg)
 
-        st.markdown("</div>", unsafe_allow_html=True)
-
+ 
 def render_user_sidebar(in_sidebar=False):
     """Render the signed-in operator panel in the page's top-right corner."""
     user = st.session_state.get("user", {})
